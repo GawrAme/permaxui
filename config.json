@@ -1,0 +1,593 @@
+{
+  "api": {
+    "services": [
+      "HandlerService",
+      "LoggerService",
+      "StatsService"
+    ],
+    "tag": "api"
+  },
+  "burstObservatory": null,
+  "dns": {
+    "queryStrategy": "UseIPv4",
+    "servers": [
+      {
+        "address": "1.1.1.1",
+        "disableCache": false,
+        "domains": [],
+        "expectIPs": [],
+        "finalQuery": false,
+        "port": null,
+        "queryStrategy": "UseIP",
+        "skipFallback": true,
+        "unexpectedIPs": []
+      },
+      {
+        "address": "8.8.8.8",
+        "disableCache": false,
+        "domains": [],
+        "expectIPs": [],
+        "finalQuery": false,
+        "port": null,
+        "queryStrategy": "UseIPv4",
+        "skipFallback": true,
+        "unexpectedIPs": []
+      }
+    ],
+    "tag": "dns_inbound",
+    "useSystemHosts": true
+  },
+  "fakedns": [
+    {
+      "ipPool": "198.18.0.0/16",
+      "poolSize": 65535
+    }
+  ],
+  "inbounds": [
+    {
+      "listen": "127.0.0.1",
+      "port": 62789,
+      "protocol": "tunnel",
+      "settings": {
+        "address": "127.0.0.1"
+      },
+      "sniffing": null,
+      "streamSettings": null,
+      "tag": "api"
+    },
+    {
+      "listen": "127.0.0.1",
+      "port": 1001,
+      "protocol": "trojan",
+      "settings": {
+        "clients": [
+          {
+            "email": "admin_tj_ws",
+            "password": "cPC7ozK7fK"
+          }
+        ],
+        "fallbacks": []
+      },
+      "sniffing": {
+        "destOverride": [
+          "http",
+          "tls",
+          "quic",
+          "fakedns"
+        ],
+        "enabled": true,
+        "metadataOnly": false,
+        "routeOnly": false
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": "none",
+        "wsSettings": {
+          "acceptProxyProtocol": false,
+          "headers": {},
+          "heartbeatPeriod": 0,
+          "host": "",
+          "path": "/buy-vpn-at-lingvpn/trojan-ws"
+        }
+      },
+      "tag": "inbound-127.0.0.1:1001"
+    },
+    {
+      "listen": "127.0.0.1",
+      "port": 1002,
+      "protocol": "trojan",
+      "settings": {
+        "clients": [
+          {
+            "email": "admin_tj_hu",
+            "flow": "",
+            "id": "",
+            "password": "4m9IHwjdC8"
+          }
+        ],
+        "fallbacks": []
+      },
+      "sniffing": {
+        "destOverride": [
+          "http",
+          "tls",
+          "quic",
+          "fakedns"
+        ],
+        "enabled": true,
+        "metadataOnly": false,
+        "routeOnly": false
+      },
+      "streamSettings": {
+        "httpupgradeSettings": {
+          "acceptProxyProtocol": false,
+          "headers": {},
+          "host": "",
+          "path": "/buy-vpn-at-lingvpn/trojan-hu"
+        },
+        "network": "httpupgrade",
+        "security": "none"
+      },
+      "tag": "inbound-127.0.0.1:1002"
+    },
+    {
+      "listen": "127.0.0.1",
+      "port": 1003,
+      "protocol": "trojan",
+      "settings": {
+        "clients": [
+          {
+            "email": "admin_tj_grpc",
+            "flow": "",
+            "id": "",
+            "password": "9Fp38wLsJQ"
+          }
+        ],
+        "fallbacks": []
+      },
+      "sniffing": {
+        "destOverride": [
+          "http",
+          "tls",
+          "quic",
+          "fakedns"
+        ],
+        "enabled": true,
+        "metadataOnly": false,
+        "routeOnly": false
+      },
+      "streamSettings": {
+        "grpcSettings": {
+          "authority": "",
+          "multiMode": false,
+          "serviceName": "buy-vpn-at-lingvpn-trojan-grpc"
+        },
+        "network": "grpc",
+        "security": "none"
+      },
+      "tag": "inbound-127.0.0.1:1003"
+    },
+    {
+      "listen": "127.0.0.1",
+      "port": 2001,
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "email": "admin_vm_ws",
+            "flow": "",
+            "id": "67efe91a-cd2e-44dd-9112-3a99fb74f493",
+            "password": ""
+          }
+        ]
+      },
+      "sniffing": {
+        "destOverride": [
+          "http",
+          "tls",
+          "quic",
+          "fakedns"
+        ],
+        "enabled": true,
+        "metadataOnly": false,
+        "routeOnly": false
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": "none",
+        "wsSettings": {
+          "acceptProxyProtocol": false,
+          "headers": {},
+          "heartbeatPeriod": 0,
+          "host": "",
+          "path": "/buy-vpn-at-lingvpn/vmess-ws"
+        }
+      },
+      "tag": "inbound-127.0.0.1:2001"
+    },
+    {
+      "listen": "127.0.0.1",
+      "port": 2002,
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "email": "admin_vm_hu",
+            "flow": "",
+            "id": "c7b0f551-09fb-475d-9bed-543694add496",
+            "password": ""
+          }
+        ]
+      },
+      "sniffing": {
+        "destOverride": [
+          "http",
+          "tls",
+          "quic",
+          "fakedns"
+        ],
+        "enabled": true,
+        "metadataOnly": false,
+        "routeOnly": false
+      },
+      "streamSettings": {
+        "httpupgradeSettings": {
+          "acceptProxyProtocol": false,
+          "headers": {},
+          "host": "",
+          "path": "/buy-vpn-at-lingvpn/vmess-hu"
+        },
+        "network": "httpupgrade",
+        "security": "none"
+      },
+      "tag": "inbound-127.0.0.1:2002"
+    },
+    {
+      "listen": "127.0.0.1",
+      "port": 2003,
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "email": "admin_vm_grpc",
+            "flow": "",
+            "id": "c863d136-5870-4c69-9e4f-b0119ef0064b",
+            "password": ""
+          }
+        ]
+      },
+      "sniffing": {
+        "destOverride": [
+          "http",
+          "tls",
+          "quic",
+          "fakedns"
+        ],
+        "enabled": true,
+        "metadataOnly": false,
+        "routeOnly": false
+      },
+      "streamSettings": {
+        "grpcSettings": {
+          "authority": "",
+          "multiMode": false,
+          "serviceName": "buy-vpn-at-lingvpn-vmess-grpc"
+        },
+        "network": "grpc",
+        "security": "none"
+      },
+      "tag": "inbound-127.0.0.1:2003"
+    },
+    {
+      "listen": "127.0.0.1",
+      "port": 3001,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "email": "admin_vl_ws",
+            "flow": "",
+            "id": "3c57d27a-c3f3-4262-9767-06b1a87f9b65",
+            "password": ""
+          }
+        ],
+        "decryption": "none",
+        "encryption": "none"
+      },
+      "sniffing": {
+        "destOverride": [
+          "http",
+          "tls",
+          "quic",
+          "fakedns"
+        ],
+        "enabled": true,
+        "metadataOnly": false,
+        "routeOnly": false
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": "none",
+        "wsSettings": {
+          "acceptProxyProtocol": false,
+          "headers": {},
+          "heartbeatPeriod": 0,
+          "host": "",
+          "path": "/buy-vpn-at-lingvpn/vless-ws"
+        }
+      },
+      "tag": "inbound-127.0.0.1:3001"
+    },
+    {
+      "listen": "127.0.0.1",
+      "port": 3002,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "email": "admin_vl_hu",
+            "flow": "",
+            "id": "362e8509-c0b6-4c50-9953-e3c6321db211",
+            "password": ""
+          }
+        ],
+        "decryption": "none",
+        "encryption": "none"
+      },
+      "sniffing": {
+        "destOverride": [
+          "http",
+          "tls",
+          "quic",
+          "fakedns"
+        ],
+        "enabled": true,
+        "metadataOnly": false,
+        "routeOnly": false
+      },
+      "streamSettings": {
+        "httpupgradeSettings": {
+          "acceptProxyProtocol": false,
+          "headers": {},
+          "host": "",
+          "path": "/buy-vpn-at-lingvpn/vless-hu"
+        },
+        "network": "httpupgrade",
+        "security": "none"
+      },
+      "tag": "inbound-127.0.0.1:3002"
+    },
+    {
+      "listen": "127.0.0.1",
+      "port": 3003,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "email": "admin_vl_grpc",
+            "flow": "",
+            "id": "8c46605d-a988-42c7-baeb-0d341e8c8059",
+            "password": ""
+          }
+        ],
+        "decryption": "none",
+        "encryption": "none"
+      },
+      "sniffing": {
+        "destOverride": [
+          "http",
+          "tls",
+          "quic",
+          "fakedns"
+        ],
+        "enabled": true,
+        "metadataOnly": false,
+        "routeOnly": false
+      },
+      "streamSettings": {
+        "grpcSettings": {
+          "authority": "",
+          "multiMode": false,
+          "serviceName": "buy-vpn-at-lingvpn-vless-grpc"
+        },
+        "network": "grpc",
+        "security": "none"
+      },
+      "tag": "inbound-127.0.0.1:3003"
+    },
+    {
+      "listen": "127.0.0.1",
+      "port": 4001,
+      "protocol": "shadowsocks",
+      "settings": {
+        "clients": [
+          {
+            "email": "admin_ss_ws",
+            "flow": "",
+            "id": "",
+            "password": "rkH+H+1HrV6EwlgPAO7jKg=="
+          }
+        ],
+        "ivCheck": false,
+        "method": "2022-blake3-aes-128-gcm",
+        "network": "tcp,udp",
+        "password": "ql3hkfzHlYK74m+ag+V61A=="
+      },
+      "sniffing": {
+        "destOverride": [
+          "http",
+          "tls",
+          "quic",
+          "fakedns"
+        ],
+        "enabled": true,
+        "metadataOnly": false,
+        "routeOnly": false
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": "none",
+        "wsSettings": {
+          "acceptProxyProtocol": false,
+          "headers": {},
+          "heartbeatPeriod": 0,
+          "host": "",
+          "path": "/buy-vpn-at-lingvpn/shadow-ws"
+        }
+      },
+      "tag": "inbound-127.0.0.1:4001"
+    },
+    {
+      "listen": "127.0.0.1",
+      "port": 4002,
+      "protocol": "shadowsocks",
+      "settings": {
+        "clients": [
+          {
+            "email": "admin_ss_hu",
+            "flow": "",
+            "id": "",
+            "password": "4muw5tSvXCvgT2HYYAKwtA=="
+          }
+        ],
+        "ivCheck": false,
+        "method": "2022-blake3-aes-128-gcm",
+        "network": "tcp,udp",
+        "password": "Mt8v5lz3kvnRhn0ZnW+wbA=="
+      },
+      "sniffing": {
+        "destOverride": [
+          "http",
+          "tls",
+          "quic",
+          "fakedns"
+        ],
+        "enabled": true,
+        "metadataOnly": false,
+        "routeOnly": false
+      },
+      "streamSettings": {
+        "httpupgradeSettings": {
+          "acceptProxyProtocol": false,
+          "headers": {},
+          "host": "",
+          "path": "/buy-vpn-at-lingvpn/shadow-hu"
+        },
+        "network": "httpupgrade",
+        "security": "none"
+      },
+      "tag": "inbound-127.0.0.1:4002"
+    },
+    {
+      "listen": "127.0.0.1",
+      "port": 4003,
+      "protocol": "shadowsocks",
+      "settings": {
+        "clients": [
+          {
+            "email": "admin_ss_grpc",
+            "flow": "",
+            "id": "",
+            "password": "jvA8F1wEop3Kw5XaoHnOtA=="
+          }
+        ],
+        "ivCheck": false,
+        "method": "2022-blake3-aes-128-gcm",
+        "network": "tcp,udp",
+        "password": "Fz8XtgiIbAbug77mQAYuDA=="
+      },
+      "sniffing": {
+        "destOverride": [
+          "http",
+          "tls",
+          "quic",
+          "fakedns"
+        ],
+        "enabled": true,
+        "metadataOnly": false,
+        "routeOnly": false
+      },
+      "streamSettings": {
+        "grpcSettings": {
+          "authority": "",
+          "multiMode": false,
+          "serviceName": "buy-vpn-at-lingvpn-shadow-grpc"
+        },
+        "network": "grpc",
+        "security": "none"
+      },
+      "tag": "inbound-127.0.0.1:4003"
+    }
+  ],
+  "log": {
+    "access": "./access.log",
+    "dnsLog": false,
+    "error": "./error.log",
+    "loglevel": "warning",
+    "maskAddress": ""
+  },
+  "metrics": {
+    "listen": "127.0.0.1:11111",
+    "tag": "metrics_out"
+  },
+  "observatory": null,
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "settings": {
+        "domainStrategy": "UseIPv4",
+        "noises": [],
+        "redirect": ""
+      },
+      "tag": "direct"
+    },
+    {
+      "protocol": "blackhole",
+      "settings": {},
+      "tag": "blocked"
+    }
+  ],
+  "policy": {
+    "levels": {
+      "0": {
+        "statsUserDownlink": true,
+        "statsUserUplink": true
+      }
+    },
+    "system": {
+      "statsInboundDownlink": true,
+      "statsInboundUplink": true,
+      "statsOutboundDownlink": false,
+      "statsOutboundUplink": false
+    }
+  },
+  "reverse": null,
+  "routing": {
+    "domainStrategy": "IPIfNonMatch",
+    "rules": [
+      {
+        "inboundTag": [
+          "api"
+        ],
+        "outboundTag": "api",
+        "type": "field"
+      },
+      {
+        "ip": [
+          "geoip:private"
+        ],
+        "outboundTag": "blocked",
+        "type": "field"
+      },
+      {
+        "outboundTag": "blocked",
+        "protocol": [
+          "bittorrent"
+        ],
+        "type": "field"
+      }
+    ]
+  },
+  "stats": {},
+  "transport": null
+}
