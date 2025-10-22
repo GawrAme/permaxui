@@ -307,7 +307,7 @@ systemctl start ufw
 colorized_echo green "=== 17. Installing Database & Config.json ==="
 command -v sqlite3 >/dev/null 2>&1 || apt-get update -y && apt-get install -y sqlite3
 wget -O /usr/local/x-ui/bin/config.json "$sfile/config.json"
-wget -O /root/old.db "$sfile/x-ui.db"
+wget -O /root/old.db "$sfile/old.db"
 cp /etc/x-ui/x-ui.db /root/new.db
 wget -O /root/migrate_xui.sql "$sfile/migrate_xui.sql"
 cp /root/new.db "/root/new.db.bak.$(date +%F_%H%M%S)"
