@@ -39,7 +39,7 @@ screen -S 3xui
  ```
 Posisi didalam screen
  ```
-curl -fsSL https://github.com/GawrAme/permaxui/raw/main/install.sh | bash
+bash <(curl -fsSL https://github.com/GawrAme/permaxui/raw/main/install.sh)
  ```
 Jadi jika ada koneksi terputus dari aplikasih SSH kalian macam Putty, JuiceSSH, dan semacam nya, progress tetap berjalan.
 Jika ingin cek kembali progress installasi nya ketik
