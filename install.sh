@@ -356,7 +356,6 @@ cat >/etc/nginx/conf.d/xray.conf <<'NGINX2'
         listen 80;
         listen [::]:80;
         listen [::]:443 ssl ipv6only=off reuseport;
-        listen [::]:443 quic reuseport ipv6only=off;
         http2 on;
         set_real_ip_from 127.0.0.0/8;
 #ips-v4:
