@@ -351,239 +351,243 @@ systemctl restart x-ui
 WEBPATH=$(cat /etc/x-ui/webbasepath)
 USERNAME=$(cat /etc/x-ui/username)
 PASSWORD=$(cat /etc/x-ui/password)
-cat >/etc/nginx/conf.d/xray.conf <<'NGINX2'
-    server {
-        listen 80;
-        listen [::]:80;
-        listen [::]:443 ssl ipv6only=off reuseport;
-        set_real_ip_from 127.0.0.0/8;
-#ips-v4:
-        set_real_ip_from 103.21.244.0/22;
-        set_real_ip_from 103.22.200.0/22;
-        set_real_ip_from 103.31.4.0/22;
-        set_real_ip_from 104.16.0.0/13;
-        set_real_ip_from 104.24.0.0/14;
-        set_real_ip_from 108.162.192.0/18;
-        set_real_ip_from 131.0.72.0/22;
-        set_real_ip_from 141.101.64.0/18;
-        set_real_ip_from 162.158.0.0/15;
-        set_real_ip_from 172.64.0.0/13;
-        set_real_ip_from 173.245.48.0/20;
-        set_real_ip_from 188.114.96.0/20;
-        set_real_ip_from 190.93.240.0/20;
-        set_real_ip_from 197.234.240.0/22;
-        set_real_ip_from 198.41.128.0/17;
-#ips-v6:
-        set_real_ip_from 2400:cb00::/32;
-        set_real_ip_from 2606:4700::/32;
-        set_real_ip_from 2803:f800::/32;
-        set_real_ip_from 2405:b500::/32;
-        set_real_ip_from 2405:8100::/32;
-        set_real_ip_from 2a06:98c0::/29;
-        set_real_ip_from 2c0f:f248::/32;
-             server_name ${domain};
-             real_ip_header X-Forwarded-For;
-             ssl_certificate /etc/x-ui/xray.crt;
-             ssl_certificate_key /etc/x-ui/xray.key;
-             ssl_ciphers EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+ECDSA+AES128:EECDH+aRSA+AES128:RSA+AES128:EECDH+ECDSA+AES256:EECDH+aRSA+AES256:RSA+AES256:EECDH+ECDSA+3DES:EECDH+aRSA+3DES:RSA+3DES:!MD5;
-             ssl_protocols TLSv1.1 TLSv1.2 TLSv1.3;
-             root /var/www/html;
+cat >/etc/nginx/conf.d/xray.conf <<NGINX2
+server {
+    listen 80;
+    listen [::]:80;
+    listen 443 ssl reuseport;
+    listen [::]:443 ssl ipv6only=off reuseport;
 
-# panel via prefix
-location ${WEBPATH} {
-proxy_set_header Host $host;
-proxy_set_header X-Real-IP $remote_addr;
-proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-proxy_set_header X-Forwarded-Proto https;
-proxy_pass http://127.0.0.1:2053;
-}
-location /sub {
-proxy_set_header Host $host;
-proxy_set_header X-Real-IP $remote_addr;
-proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-proxy_set_header X-Forwarded-Proto https;
-proxy_pass http://127.0.0.1:2096;
-}
-location ~ /buy-vpn-at-lingvpn/trojan-ws {
-if ($http_upgrade != "Upgrade") {
-rewrite /(.*) /buy-vpn-at-lingvpn/trojan-ws break;
-}
-proxy_redirect off;
-proxy_pass http://127.0.0.1:1001;
-proxy_connect_timeout 4s;
-proxy_read_timeout 120s;
-proxy_send_timeout 12s;
-proxy_http_version 1.1;
-proxy_set_header X-Real-IP $remote_addr;
-proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-proxy_set_header Upgrade $http_upgrade;
-proxy_set_header Connection "upgrade";
-proxy_set_header Host $http_host;
-}
-location ~ /buy-vpn-at-lingvpn/vmess-ws {
-if ($http_upgrade != "Upgrade") {
-rewrite /(.*) /buy-vpn-at-lingvpn/vmess-ws break;
-}
-proxy_redirect off;
-proxy_pass http://127.0.0.1:2001;
-proxy_connect_timeout 4s;
-proxy_read_timeout 120s;
-proxy_send_timeout 12s;
-proxy_http_version 1.1;
-proxy_set_header X-Real-IP $remote_addr;
-proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-proxy_set_header Upgrade $http_upgrade;
-proxy_set_header Connection "upgrade";
-proxy_set_header Host $http_host;
-}
-location ~ /buy-vpn-at-lingvpn/vless-ws {
-if ($http_upgrade != "Upgrade") {
-rewrite /(.*) /buy-vpn-at-lingvpn/vless-ws break;
-}
-proxy_redirect off;
-proxy_pass http://127.0.0.1:3001;
-proxy_connect_timeout 4s;
-proxy_read_timeout 120s;
-proxy_send_timeout 12s;
-proxy_http_version 1.1;
-proxy_set_header X-Real-IP $remote_addr;
-proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-proxy_set_header Upgrade $http_upgrade;
-proxy_set_header Connection "upgrade";
-proxy_set_header Host $http_host;
-}
-location ~ /buy-vpn-at-lingvpn/shadow-ws {
-if ($http_upgrade != "Upgrade") {
-rewrite /(.*) /buy-vpn-at-lingvpn/shadow-ws break;
-}
-proxy_redirect off;
-proxy_pass http://127.0.0.1:4001;
-proxy_connect_timeout 4s;
-proxy_read_timeout 120s;
-proxy_send_timeout 12s;
-proxy_http_version 1.1;
-proxy_set_header X-Real-IP $remote_addr;
-proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-proxy_set_header Upgrade $http_upgrade;
-proxy_set_header Connection "upgrade";
-proxy_set_header Host $http_host;
-}
-location = /buy-vpn-at-lingvpn/trojan-hu {
-            if ($http_upgrade != "websocket") {
-                return 404;
-}
-proxy_redirect off;
-proxy_pass http://127.0.0.1:1002;
-proxy_connect_timeout 4s;
-proxy_read_timeout 120s;
-proxy_send_timeout 12s;
-proxy_http_version 1.1;
-proxy_set_header Upgrade $http_upgrade;
-proxy_set_header Connection "upgrade";
-proxy_set_header Host $host;
-proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-proxy_set_header X-Real-IP $remote_addr;
-}
-location = /buy-vpn-at-lingvpn/vmess-hu {
-            if ($http_upgrade != "websocket") {
-                return 404;
-}
-proxy_redirect off;
-proxy_pass http://127.0.0.1:2002;
-proxy_connect_timeout 4s;
-proxy_read_timeout 120s;
-proxy_send_timeout 12s;
-proxy_http_version 1.1;
-proxy_set_header Upgrade $http_upgrade;
-proxy_set_header Connection "upgrade";
-proxy_set_header Host $host;
-proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-proxy_set_header X-Real-IP $remote_addr;
-}
-location = /buy-vpn-at-lingvpn/vless-hu {
-            if ($http_upgrade != "websocket") {
-                return 404;
-}
-proxy_redirect off;
-proxy_pass http://127.0.0.1:3002;
-proxy_connect_timeout 4s;
-proxy_read_timeout 120s;
-proxy_send_timeout 12s;
-proxy_http_version 1.1;
-proxy_set_header Upgrade $http_upgrade;
-proxy_set_header Connection "upgrade";
-proxy_set_header Host $host;
-proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-proxy_set_header X-Real-IP $remote_addr;
-}
-location = /buy-vpn-at-lingvpn/shadow-hu {
-            if ($http_upgrade != "websocket") {
-                return 404;
-}
-proxy_redirect off;
-proxy_pass http://127.0.0.1:4002;
-proxy_connect_timeout 4s;
-proxy_read_timeout 120s;
-proxy_send_timeout 12s;
-proxy_http_version 1.1;
-proxy_set_header Upgrade $http_upgrade;
-proxy_set_header Connection "upgrade";
-proxy_set_header Host $host;
-proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-proxy_set_header X-Real-IP $remote_addr;
-}
-location ^~ /buy-vpn-at-lingvpn-trojan-grpc {
-            if ($request_method != "POST") {
-                return 404;
-}
-client_body_buffer_size 1m;
-client_body_timeout 1h;
-client_max_body_size 0;
-grpc_read_timeout 1h;
-grpc_send_timeout 1h;
-grpc_set_header Host $host;
-grpc_set_header X-Real-IP $remote_addr;
-grpc_pass grpc://127.0.0.1:1003;
-}
-location ^~ /buy-vpn-at-lingvpn-vmess-grpc {
-            if ($request_method != "POST") {
-                return 404;
-}
-client_body_buffer_size 1m;
-client_body_timeout 1h;
-client_max_body_size 0;
-grpc_read_timeout 1h;
-grpc_send_timeout 1h;
-grpc_set_header Host $host;
-grpc_set_header X-Real-IP $remote_addr;
-grpc_pass grpc://127.0.0.1:2003;
-}
-location ^~ /buy-vpn-at-lingvpn-vless-grpc {
-            if ($request_method != "POST") {
-                return 404;
-}
-client_body_buffer_size 1m;
-client_body_timeout 1h;
-client_max_body_size 0;
-grpc_read_timeout 1h;
-grpc_send_timeout 1h;
-grpc_set_header Host $host;
-grpc_set_header X-Real-IP $remote_addr;
-grpc_pass grpc://127.0.0.1:3003;
-}
-location ^~ /buy-vpn-at-lingvpn-shadow-grpc {
-            if ($request_method != "POST") {
-                return 404;
-}
-client_body_buffer_size 1m;
-client_body_timeout 1h;
-client_max_body_size 0;
-grpc_read_timeout 1h;
-grpc_send_timeout 1h;
-grpc_set_header Host $host;
-grpc_set_header X-Real-IP $remote_addr;
-grpc_pass grpc://127.0.0.1:4003;
-}
+    set_real_ip_from 127.0.0.0/8;
+#ips-v4:
+    set_real_ip_from 103.21.244.0/22;
+    set_real_ip_from 103.22.200.0/22;
+    set_real_ip_from 103.31.4.0/22;
+    set_real_ip_from 104.16.0.0/13;
+    set_real_ip_from 104.24.0.0/14;
+    set_real_ip_from 108.162.192.0/18;
+    set_real_ip_from 131.0.72.0/22;
+    set_real_ip_from 141.101.64.0/18;
+    set_real_ip_from 162.158.0.0/15;
+    set_real_ip_from 172.64.0.0/13;
+    set_real_ip_from 173.245.48.0/20;
+    set_real_ip_from 188.114.96.0/20;
+    set_real_ip_from 190.93.240.0/20;
+    set_real_ip_from 197.234.240.0/22;
+    set_real_ip_from 198.41.128.0/17;
+#ips-v6:
+    set_real_ip_from 2400:cb00::/32;
+    set_real_ip_from 2606:4700::/32;
+    set_real_ip_from 2803:f800::/32;
+    set_real_ip_from 2405:b500::/32;
+    set_real_ip_from 2405:8100::/32;
+    set_real_ip_from 2a06:98c0::/29;
+    set_real_ip_from 2c0f:f248::/32;
+
+    server_name ${domain};
+    real_ip_header CF-Connecting-IP;
+    real_ip_recursive on;
+    #real_ip_header X-Forwarded-For;
+
+    ssl_certificate /etc/x-ui/xray.crt;
+    ssl_certificate_key /etc/x-ui/xray.key;
+    ssl_ciphers EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+ECDSA+AES128:EECDH+aRSA+AES128:RSA+AES128:EECDH+ECDSA+AES256:EECDH+aRSA+AES256:RSA+AES256:EECDH+ECDSA+3DES:EECDH+aRSA+3DES:RSA+3DES:!MD5;
+    ssl_protocols TLSv1.1 TLSv1.2 TLSv1.3;
+
+    root /var/www/html;
+
+    # panel via prefix
+    location ${WEBPATH} {
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_pass http://127.0.0.1:2053;
+    }
+
+    location /sub {
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_pass http://127.0.0.1:2096;
+    }
+
+    location ~ /buy-vpn-at-lingvpn/trojan-ws {
+        if (\$http_upgrade != "Upgrade") {
+            rewrite /(.*) /buy-vpn-at-lingvpn/trojan-ws break;
+        }
+        proxy_redirect off;
+        proxy_pass http://127.0.0.1:1001;
+        proxy_connect_timeout 4s;
+        proxy_read_timeout 120s;
+        proxy_send_timeout 12s;
+        proxy_http_version 1.1;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host \$http_host;
+    }
+
+    location ~ /buy-vpn-at-lingvpn/vmess-ws {
+        if (\$http_upgrade != "Upgrade") {
+            rewrite /(.*) /buy-vpn-at-lingvpn/vmess-ws break;
+        }
+        proxy_redirect off;
+        proxy_pass http://127.0.0.1:2001;
+        proxy_connect_timeout 4s;
+        proxy_read_timeout 120s;
+        proxy_send_timeout 12s;
+        proxy_http_version 1.1;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host \$http_host;
+    }
+
+    location ~ /buy-vpn-at-lingvpn/vless-ws {
+        if (\$http_upgrade != "Upgrade") {
+            rewrite /(.*) /buy-vpn-at-lingvpn/vless-ws break;
+        }
+        proxy_redirect off;
+        proxy_pass http://127.0.0.1:3001;
+        proxy_connect_timeout 4s;
+        proxy_read_timeout 120s;
+        proxy_send_timeout 12s;
+        proxy_http_version 1.1;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host \$http_host;
+    }
+
+    location ~ /buy-vpn-at-lingvpn/shadow-ws {
+        if (\$http_upgrade != "Upgrade") {
+            rewrite /(.*) /buy-vpn-at-lingvpn/shadow-ws break;
+        }
+        proxy_redirect off;
+        proxy_pass http://127.0.0.1:4001;
+        proxy_connect_timeout 4s;
+        proxy_read_timeout 120s;
+        proxy_send_timeout 12s;
+        proxy_http_version 1.1;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host \$http_host;
+    }
+
+    location = /buy-vpn-at-lingvpn/trojan-hu {
+        if (\$http_upgrade != "websocket") { return 404; }
+        proxy_redirect off;
+        proxy_pass http://127.0.0.1:1002;
+        proxy_connect_timeout 4s;
+        proxy_read_timeout 120s;
+        proxy_send_timeout 12s;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host \$host;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Real-IP \$remote_addr;
+    }
+
+    location = /buy-vpn-at-lingvpn/vmess-hu {
+        if (\$http_upgrade != "websocket") { return 404; }
+        proxy_redirect off;
+        proxy_pass http://127.0.0.1:2002;
+        proxy_connect_timeout 4s;
+        proxy_read_timeout 120s;
+        proxy_send_timeout 12s;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host \$host;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Real-IP \$remote_addr;
+    }
+
+    location = /buy-vpn-at-lingvpn/vless-hu {
+        if (\$http_upgrade != "websocket") { return 404; }
+        proxy_redirect off;
+        proxy_pass http://127.0.0.1:3002;
+        proxy_connect_timeout 4s;
+        proxy_read_timeout 120s;
+        proxy_send_timeout 12s;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host \$host;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Real-IP \$remote_addr;
+    }
+
+    location = /buy-vpn-at-lingvpn/shadow-hu {
+        if (\$http_upgrade != "websocket") { return 404; }
+        proxy_redirect off;
+        proxy_pass http://127.0.0.1:4002;
+        proxy_connect_timeout 4s;
+        proxy_read_timeout 120s;
+        proxy_send_timeout 12s;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host \$host;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Real-IP \$remote_addr;
+    }
+
+    location ^~ /buy-vpn-at-lingvpn-trojan-grpc {
+        if (\$request_method != "POST") { return 404; }
+        client_body_buffer_size 1m;
+        client_body_timeout 1h;
+        client_max_body_size 0;
+        grpc_read_timeout 1h;
+        grpc_send_timeout 1h;
+        grpc_set_header Host \$host;
+        grpc_set_header X-Real-IP \$remote_addr;
+        grpc_pass grpc://127.0.0.1:1003;
+    }
+
+    location ^~ /buy-vpn-at-lingvpn-vmess-grpc {
+        if (\$request_method != "POST") { return 404; }
+        client_body_buffer_size 1m;
+        client_body_timeout 1h;
+        client_max_body_size 0;
+        grpc_read_timeout 1h;
+        grpc_send_timeout 1h;
+        grpc_set_header Host \$host;
+        grpc_set_header X-Real-IP \$remote_addr;
+        grpc_pass grpc://127.0.0.1:2003;
+    }
+
+    location ^~ /buy-vpn-at-lingvpn-vless-grpc {
+        if (\$request_method != "POST") { return 404; }
+        client_body_buffer_size 1m;
+        client_body_timeout 1h;
+        client_max_body_size 0;
+        grpc_read_timeout 1h;
+        grpc_send_timeout 1h;
+        grpc_set_header Host \$host;
+        grpc_set_header X-Real-IP \$remote_addr;
+        grpc_pass grpc://127.0.0.1:3003;
+    }
+
+    location ^~ /buy-vpn-at-lingvpn-shadow-grpc {
+        if (\$request_method != "POST") { return 404; }
+        client_body_buffer_size 1m;
+        client_body_timeout 1h;
+        client_max_body_size 0;
+        grpc_read_timeout 1h;
+        grpc_send_timeout 1h;
+        grpc_set_header Host \$host;
+        grpc_set_header X-Real-IP \$remote_addr;
+        grpc_pass grpc://127.0.0.1:4003;
+    }
 }
 NGINX2
 echo "Untuk data login dashboard 3XUI: "
